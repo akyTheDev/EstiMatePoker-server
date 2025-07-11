@@ -6,7 +6,10 @@
   "scripts": {
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest --config jest.config.json",
+    "test:watch": "jest --watch",
+    "generate-coverage-all-packages": "nyc report --reporter=html --reporter=text --reporter=lcov --reporter=clover --report-dir=./coverage/all --temp-dir=./coverage/temp",
+    "test:cov": "npm run test && npm run generate-coverage-all-packages"
   },
   "repository": {
     "type": "git",
@@ -17,15 +20,22 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
-    "redis": "^5.6.0"
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.2",
+    "redis": "^5.6.0",
+    "reflect-metadata": "^0.2.2"
   },
   "devDependencies": {
+    "@types/jest": "^30.0.0",
     "@typescript-eslint/eslint-plugin": "^8.36.0",
     "eslint": "^8.0.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-prettier": "^5.0.0",
+    "jest": "^30.0.4",
+    "nyc": "^17.1.0",
     "prettier": "^3.0.0",
+    "ts-jest": "^29.4.0",
     "typescript": "^5.8.3"
   }
 }
