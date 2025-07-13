@@ -9,5 +9,8 @@
   "coverageDirectory": "../coverage/default",
   "testEnvironment": "node",
   "setupFilesAfterEnv": ["../setupTests.ts"],
-  "collectCoverage": true
+  "collectCoverage": true,
+  "moduleNameMapper": {
+    "^@/(.*)$": "<rootDir>/$1"
+  }
 }

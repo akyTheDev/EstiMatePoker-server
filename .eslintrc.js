@@ -44,4 +44,11 @@ module.exports = {
       },
     ],
   },
+  settings: {
+    'import/resolver': {
+      typescript: {
+        project: './tsconfig.json', // adjust if your tsconfig is in another location
+      },
+    },
+  },
 }
