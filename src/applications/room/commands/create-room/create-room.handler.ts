@@ -1,7 +1,8 @@
-import { IRoomPubSub, IRoomRepository } from '../../../../domain/room/ports'
-import { CreateRoomCommand } from './create-room.command'
 import { v4 as uuidv4 } from 'uuid'
+
+import { CreateRoomCommand } from './create-room.command'
 import { Room, Participant } from '../../../../domain/room/entities'
+import { IRoomPubSub, IRoomRepository } from '../../../../domain/room/ports'
 
 export class CreateRoomHandler {
   constructor(

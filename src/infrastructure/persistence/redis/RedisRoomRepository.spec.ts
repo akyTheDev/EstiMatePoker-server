@@ -1,6 +1,7 @@
 import { createClient, RedisClientType } from 'redis'
-import { Room, Participant } from '../../../domain/room/entities'
+
 import { RedisRoomRepository } from './RedisRoomRepository'
+import { Room, Participant } from '../../../domain/room/entities'
 import { config } from '../../../infrastructure/config'
 
 describe('RedisRoomRepository (Integration)', () => {

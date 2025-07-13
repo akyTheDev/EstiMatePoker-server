@@ -1,4 +1,5 @@
 import { RedisClientType } from 'redis'
+
 import { Room, Participant } from '../../../domain/room/entities'
 import { IRoomRepository } from '../../../domain/room/ports'
 

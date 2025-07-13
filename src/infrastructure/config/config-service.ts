@@ -3,7 +3,7 @@ import 'reflect-metadata'
 import { plainToInstance } from 'class-transformer'
 import { IsString, validateSync } from 'class-validator'
 
-import {ApplicationConfiguration} from './model'
+import { ApplicationConfiguration } from './model'
 
 class EnvironmentVariables {
   @IsString()
