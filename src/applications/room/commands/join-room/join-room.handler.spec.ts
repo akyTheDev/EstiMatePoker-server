@@ -1,27 +1,30 @@
 import { Room, Participant, IRoomPubSub, IRoomRepository } from '@/domain/room'
 
-import { CreateRoomCommand } from './create-room.command'
-import { CreateRoomHandler } from './create-room.handler'
+import { JoinRoomCommand } from './join-room.command'
+import { JoinRoomHandler } from './join-room.handler'
 
-jest.mock('uuid', () => ({
-  v4: () => 'mock-room-id-123',
-}))
-
-const mockRoomRepo: IRoomRepository = {
-  save: jest.fn(),
+const mockRoomRepo: jest.Mocked<IRoomRepository> = {
   findById: jest.fn(),
+  save: jest.fn(),
   delete: jest.fn(),
 }
 
-const mockRoomPubSub: IRoomPubSub = {
+const mockRoomPubSub: jest.Mocked<IRoomPubSub> = {
   publishState: jest.fn(),
 }
 
-describe('CreateRoomHandler', () => {
-  let handler: CreateRoomHandler
+describe('JoinRoomHandler', () => {
+  let handler: JoinRoomHandler
+  let room: Room
+  let host: Participant
 
   beforeEach(() => {
-    handler = new CreateRoomHandler(mockRoomRepo, mockRoomPubSub)
+    handler = new JoinRoomHandler(mockRoomRepo, mockRoomPubSub)
+
+    host = new Participant('host-123', 'Host User')
+    room = new Room('mock-room-id-123', 'host-123')
+    room.addParticipant(host)
+    mockRoomRepo.findById.mockResolvedValue(room)
   })
 
   it('should be defined', () => {
@@ -29,8 +32,13 @@ describe('CreateRoomHandler', () => {
   })
 
   describe('handle', () => {
-    it('should create a new room and publish the state', async () => {
-      const command = new CreateRoomCommand('host-123', 'Host User')
+    it('should add the participant and publish the state', async () => {
+      const command = new JoinRoomCommand(
+        'mock-room-id-123',
+        'newuser-123',
+        'New User',
+      )
+
       await handler.handle(command)
 
       expect(mockRoomRepo.save).toHaveBeenCalledTimes(1)
@@ -46,13 +54,19 @@ describe('CreateRoomHandler', () => {
 
       expect(savedRoomArgument.id).toBe('mock-room-id-123')
       expect(savedRoomArgument.hostId).toBe('host-123')
-      expect(savedRoomArgument.getParticipants().size).toBe(1)
+      expect(savedRoomArgument.getParticipants().size).toBe(2)
 
       const hostParticipant = savedRoomArgument
         .getParticipants()
         .get('host-123')
       expect(hostParticipant).toBeInstanceOf(Participant)
       expect(hostParticipant.name).toBe('Host User')
+
+      const newParticipant = savedRoomArgument
+        .getParticipants()
+        .get('newuser-123')
+      expect(newParticipant).toBeInstanceOf(Participant)
+      expect(newParticipant.name).toBe('New User')
     })
   })
 })
