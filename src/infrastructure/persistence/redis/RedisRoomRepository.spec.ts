@@ -1,8 +1,10 @@
 import { createClient, RedisClientType } from 'redis'
 
+import { Room, Participant } from '@/domain/room'
+import { NotFoundError } from '@/domain/shared'
+import { config } from '@/infrastructure/config'
+
 import { RedisRoomRepository } from './RedisRoomRepository'
-import { Room, Participant } from '../../../domain/room/entities'
-import { config } from '../../../infrastructure/config'
 
 describe('RedisRoomRepository (Integration)', () => {
   let redisClient: RedisClientType
@@ -42,10 +44,10 @@ describe('RedisRoomRepository (Integration)', () => {
     expect(foundRoom?.getParticipants().size).toBe(1)
   })
 
-  it('should return null when finding a non-existent room', async () => {
-    const foundRoom = await repo.findById('non-existent-room')
-
-    expect(foundRoom).toBeUndefined()
+  it('should throw not found error when finding a non-existent room', async () => {
+    await expect(repo.findById('non-existent-room')).rejects.toThrow(
+      NotFoundError,
+    )
   })
 
   it('should correctly handle optimistic locking conflicts', async () => {
@@ -69,8 +71,6 @@ describe('RedisRoomRepository (Integration)', () => {
 
     await repo.delete('room-123')
 
-    const foundRoom = await repo.findById('room-123')
-
-    expect(foundRoom).toBeUndefined()
+    await expect(repo.findById('room-123')).rejects.toThrow(NotFoundError)
   })
 })

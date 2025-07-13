@@ -1,20 +1,20 @@
 import { RedisClientType } from 'redis'
 
-import { Room, Participant } from '../../../domain/room/entities'
-import { IRoomRepository } from '../../../domain/room/ports'
+import { Room, Participant, IRoomRepository } from '@/domain/room/entities'
+import { ConflictResourceError, NotFoundError } from '@/domain/shared'
 
 export class RedisRoomRepository implements IRoomRepository {
   private readonly redisKeyPrefix = 'room'
 
   constructor(private readonly redisClient: RedisClientType) {}
 
-  public async findById(roomId: string): Promise<Room | undefined> {
+  public async findById(roomId: string): Promise<Room> {
     const roomKey = `${this.redisKeyPrefix}:${roomId}`
 
     const data = await this.redisClient.hGetAll(roomKey)
 
     if (!data || !data.id) {
-      return undefined
+      throw new NotFoundError(`Room with id ${roomId} not found.`)
     }
 
     const room = new Room(data.id, data.hostId)
@@ -54,7 +54,9 @@ export class RedisRoomRepository implements IRoomRepository {
     // We abort the operation by unwatching and throwing a specific error.
     if (versionInRedis !== 0 && versionInRedis !== currentVersion) {
       await this.redisClient.unwatch()
-      throw new Error('Conflict: Room has been modified by another process.')
+      throw new ConflictResourceError(
+        'Conflict: Room has been modified by another process.',
+      )
     }
 
     const participantsData: Record<string, any> = {}
@@ -76,7 +78,9 @@ export class RedisRoomRepository implements IRoomRepository {
     const result = await multi.exec()
 
     if (result === null) {
-      throw new Error('Conflict: Transaction failed due to a data race.')
+      throw new ConflictResourceError(
+        'Conflict: Transaction failed due to a data race.',
+      )
     }
 
     room.version = nextVersion
