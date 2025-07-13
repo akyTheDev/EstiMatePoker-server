@@ -1,7 +1,6 @@
 import { RedisClientType } from 'redis'
 
-import { Room } from '../../../domain/room/entities'
-import { IRoomPubSub } from '../../../domain/room/ports'
+import { Room, IRoomPubSub } from '@/domain/room/entities'
 
 export class RedisPubSub implements IRoomPubSub {
   private readonly channelPrefix = 'room'
@@ -15,6 +14,7 @@ export class RedisPubSub implements IRoomPubSub {
     room.getParticipants().forEach((participant) => {
       participantsPayload[participant.id] = {
         name: participant.name,
+        hasVote: !!participant.vote,
         vote: room.revealed ? participant.vote : undefined,
       }
     })

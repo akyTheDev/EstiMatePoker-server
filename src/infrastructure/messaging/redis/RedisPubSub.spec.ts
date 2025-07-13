@@ -1,7 +1,8 @@
 import { RedisClientType } from 'redis'
 
+import { Room, Participant } from '@/domain/room/entities'
+
 import { RedisPubSub } from './RedisPubSub'
-import { Room, Participant } from '../../../domain/room/entities'
 
 const mockRedisClient = {
   publish: jest.fn(),
