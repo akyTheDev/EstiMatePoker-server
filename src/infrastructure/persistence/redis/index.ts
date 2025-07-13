@@ -1,0 +1,1 @@
+export { RedisRoomRepository } from './RedisRoomRepository'
