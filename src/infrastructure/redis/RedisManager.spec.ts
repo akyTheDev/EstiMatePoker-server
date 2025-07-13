@@ -1,5 +1,6 @@
-import { RedisManager } from './RedisManager'
 import { createClient } from 'redis'
+
+import { RedisManager } from './RedisManager'
 
 jest.mock('redis', () => ({
   createClient: jest.fn(),

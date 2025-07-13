@@ -27,14 +27,14 @@ describe('Room', () => {
     it('should be able to add participants', () => {
       expect(room.hostId).toBe(hostParticipant.id)
 
-      let participants = room.getParticipants()
+      const participants = room.getParticipants()
       expect(participants.size).toBe(2)
       expect(participants.has(newParticipant.id)).toBe(true)
     })
 
     it('should be able to remove participants(normal participant)', () => {
       room.removeParticipant(newParticipant.id)
-      let participants = room.getParticipants()
+      const participants = room.getParticipants()
       expect(participants.size).toBe(1)
       expect(participants.has(hostParticipant.id)).toBe(true)
       expect(room.hostId).toBe(hostParticipant.id)
@@ -43,7 +43,7 @@ describe('Room', () => {
     it('should be able to remove participants(host)', () => {
       room.removeParticipant(hostParticipant.id)
 
-      let participants = room.getParticipants()
+      const participants = room.getParticipants()
       expect(participants.size).toBe(1)
       expect(participants.has(newParticipant.id)).toBe(true)
       expect(room.hostId).toBe(newParticipant.id)
@@ -52,7 +52,7 @@ describe('Room', () => {
     it("shouldn't be failed if host is removed and there is no participants", () => {
       room.removeParticipant(hostParticipant.id)
       room.removeParticipant(newParticipant.id)
-      let participants = room.getParticipants()
+      const participants = room.getParticipants()
       expect(participants.size).toBe(0)
     })
   })

@@ -1,4 +1,5 @@
 import { RedisClientType } from 'redis'
+
 import { RedisPubSub } from './RedisPubSub'
 import { Room, Participant } from '../../../domain/room/entities'
 

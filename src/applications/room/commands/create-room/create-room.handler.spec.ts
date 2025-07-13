@@ -1,7 +1,6 @@
 import { CreateRoomHandler } from './create-room.handler'
-import { CreateRoomCommand } from './create-room.command'
 import { Room, Participant } from '../../../../domain/room/entities'
-import { IRoomPubSub, IRoomRepository } from 'src/domain/room/ports'
+import { IRoomPubSub, IRoomRepository } from '../../../../domain/room/ports'
 
 jest.mock('uuid', () => ({
   v4: () => 'mock-room-id-123',
