@@ -23,7 +23,12 @@ async function bootstrap(): Promise<void> {
     const roomId = data.payload.roomId
     clients.forEach(async (clientData, ws) => {
       if (clientData.roomId === roomId && ws.readyState === WebSocket.OPEN) {
-        await ws.send(message)
+        await ws.send(
+          JSON.stringify({
+            ...data,
+            userId: clientData.userId,
+          }),
+        )
       }
     })
   })
@@ -40,7 +45,7 @@ async function bootstrap(): Promise<void> {
       wsController.handleMessage(ws, clientData, message),
     )
     ws.on('close', () => {
-      wsController.handleDisconnect(clientData)
+      wsController.handleDisconnect(ws, clientData)
       clients.delete(ws)
     })
   })
