@@ -5,6 +5,10 @@
   "description": "The server of the EstiMate Poker",
   "main": "index.js",
   "scripts": {
+    "clean": "rm -rf dist",
+    "build": "npm run clean && tsc && tsc-alias",
+    "start:prod": "node dist/src/app.js",
+    "dev": "nodemon",
     "format": "prettier --write \"src/**/*.ts\"",
     "lint": "eslint \"src/**/*.ts\" --fix",
     "test": "jest --config jest.config.json",
@@ -42,6 +46,7 @@
     "nyc": "^17.1.0",
     "prettier": "^3.0.0",
     "ts-jest": "^29.4.0",
+    "tsc-alias": "^1.8.16",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.8.3"
   }
