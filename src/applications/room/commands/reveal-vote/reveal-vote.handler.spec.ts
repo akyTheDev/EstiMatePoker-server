@@ -37,7 +37,8 @@ describe('RevealVoteHandler', () => {
     it('should make the reveal of the room as true and publish state', async () => {
       const command = new RevealVoteCommand('mock-room-id-123', 'test-user-id')
 
-      await handler.handle(command)
+      const roomId = await handler.handle(command)
+      expect(roomId).toBe('mock-room-id-123')
 
       expect(retryWithOptimisticLocking).toHaveBeenCalledTimes(1)
 

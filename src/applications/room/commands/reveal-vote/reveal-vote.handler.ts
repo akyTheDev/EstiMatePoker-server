@@ -1,19 +1,17 @@
+import { AbstractHandler } from '@/applications/common'
 import { IRoomPubSub, IRoomRepository } from '@/domain/room'
 
-import { retryWithOptimisticLocking } from '../utils'
 import { RevealVoteCommand } from './reveal-vote.command'
 
-export class RevealVoteHandler {
+export class RevealVoteHandler extends AbstractHandler<RevealVoteCommand> {
   constructor(
     private readonly roomRepository: IRoomRepository,
     private readonly roomPubSub: IRoomPubSub,
-  ) {}
-
-  async handle(command: RevealVoteCommand): Promise<void> {
-    await retryWithOptimisticLocking(() => this.performRevealVote(command))
+  ) {
+    super()
   }
 
-  private async performRevealVote(command: RevealVoteCommand): Promise<void> {
+  protected async perform(command: RevealVoteCommand): Promise<string> {
     const { roomId } = command
 
     const room = await this.roomRepository.findById(roomId)
@@ -22,5 +20,6 @@ export class RevealVoteHandler {
 
     await this.roomRepository.save(room)
     await this.roomPubSub.publishState(room)
+    return roomId
   }
 }

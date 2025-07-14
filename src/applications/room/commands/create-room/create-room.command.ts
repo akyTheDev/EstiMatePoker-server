@@ -3,14 +3,14 @@ import { IsNotEmpty, IsString, IsUUID } from 'class-validator'
 export class CreateRoomCommand {
   @IsUUID()
   @IsNotEmpty()
-  public readonly hostId: string
+  public readonly userId: string
 
   @IsString()
   @IsNotEmpty()
-  public readonly hostName: string
+  public readonly userName: string
 
-  constructor(hostId: string, hostName: string) {
-    this.hostId = hostId
-    this.hostName = hostName
+  constructor(userId: string, userName: string) {
+    this.userId = userId
+    this.userName = userName
   }
 }

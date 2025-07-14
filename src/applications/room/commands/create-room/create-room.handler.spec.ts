@@ -31,7 +31,8 @@ describe('CreateRoomHandler', () => {
   describe('handle', () => {
     it('should create a new room and publish the state', async () => {
       const command = new CreateRoomCommand('host-123', 'Host User')
-      await handler.handle(command)
+      const roomId = await handler.handle(command)
+      expect(roomId).toBe('mock-room-id-123')
 
       expect(mockRoomRepo.save).toHaveBeenCalledTimes(1)
       expect(mockRoomPubSub.publishState).toHaveBeenCalledTimes(1)

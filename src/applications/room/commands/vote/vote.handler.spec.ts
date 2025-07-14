@@ -43,7 +43,9 @@ describe('VoteHandler', () => {
     it('should find a room, cast a vote, save, and publish the state', async () => {
       const command = new VoteCommand('mock-room-id-123', 'test-user-id', '8')
 
-      await handler.handle(command)
+      const roomId = await handler.handle(command)
+
+      expect(roomId).toBe('mock-room-id-123')
 
       expect(retryWithOptimisticLocking).toHaveBeenCalledTimes(1)
 

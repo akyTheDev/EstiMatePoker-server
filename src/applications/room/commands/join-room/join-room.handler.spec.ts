@@ -39,7 +39,8 @@ describe('JoinRoomHandler', () => {
         'New User',
       )
 
-      await handler.handle(command)
+      const roomId = await handler.handle(command)
+      expect(roomId).toBe('mock-room-id-123')
 
       expect(mockRoomRepo.save).toHaveBeenCalledTimes(1)
       expect(mockRoomPubSub.publishState).toHaveBeenCalledTimes(1)
