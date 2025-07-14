@@ -3,10 +3,8 @@ import { WebSocket } from 'ws'
 
 import { configureContainer } from './container'
 import { RedisManager } from './infrastructure/redis'
-import {
-  ClientMetaData,
-  WsController,
-} from './infrastructure/web/websocket/ws.controller'
+import { ClientMetaData } from './infrastructure/web/websocket/types'
+import { WsController } from './infrastructure/web/websocket/ws.controller'
 
 const clients = new Map<
   WebSocket,
@@ -20,12 +18,10 @@ async function bootstrap(): Promise<void> {
   const redisManager = container.resolve<RedisManager>('RedisManager')
   const subscriber = redisManager.getSubscriber()
   await subscriber.pSubscribe('room:*:state', (message, _channel) => {
-    console.log('MESSAGE: ', message)
-    // const data = JSON.parse(message)
-    // const roomId = data.payload.roomId
-
+    const data = JSON.parse(message)
+    const roomId = data.payload.roomId
     clients.forEach((clientData, ws) => {
-      if (ws.readyState === WebSocket.OPEN) {
+      if (clientData.roomId === roomId && ws.readyState === WebSocket.OPEN) {
         ws.send(message)
       }
     })

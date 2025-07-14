@@ -1,6 +1,6 @@
 import { RedisClientType } from 'redis'
 
-import { Room, IRoomPubSub } from '@/domain/room/entities'
+import { Room, IRoomPubSub } from '@/domain/room'
 
 export class RedisPubSub implements IRoomPubSub {
   private readonly channelPrefix = 'room'

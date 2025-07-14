@@ -41,7 +41,8 @@ describe('ClearVoteHandler', () => {
     it('should delete all votes and assign revealed as false and publish the state', async () => {
       const command = new ClearVoteCommand('mock-room-id-123', 'test-user-id')
 
-      await handler.handle(command)
+      const roomId = await handler.handle(command)
+      expect(roomId).toBe('mock-room-id-123')
 
       expect(retryWithOptimisticLocking).toHaveBeenCalledTimes(1)
 

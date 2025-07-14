@@ -1,14 +1,17 @@
+import { AbstractHandler } from '@/applications/common'
 import { Participant, IRoomPubSub, IRoomRepository } from '@/domain/room'
 
 import { JoinRoomCommand } from './join-room.command'
 
-export class JoinRoomHandler {
+export class JoinRoomHandler extends AbstractHandler<JoinRoomCommand> {
   constructor(
     private readonly roomRepository: IRoomRepository,
     private readonly roomPubSub: IRoomPubSub,
-  ) {}
+  ) {
+    super()
+  }
 
-  async handle(command: JoinRoomCommand): Promise<string> {
+  protected async perform(command: JoinRoomCommand): Promise<string> {
     const { roomId, userId, userName } = command
 
     const room = await this.roomRepository.findById(roomId)

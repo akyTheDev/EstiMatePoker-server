@@ -4,6 +4,7 @@ import {
   JoinRoomHandler,
   VoteHandler,
   RevealVoteHandler,
+  LeaveRoomHandler,
 } from '@/applications/room/commands'
 import { IRoomPubSub, IRoomRepository } from '@/domain/room'
 import { DIContainer } from '@/domain/shared'
@@ -69,6 +70,13 @@ export const configureContainer = async (): Promise<DIContainer> => {
       container.resolve<IRoomPubSub>('RoomPubSub'),
     ),
   )
+  container.register(
+    'LeaveRoomHandler',
+    new LeaveRoomHandler(
+      container.resolve<IRoomRepository>('RoomRepository'),
+      container.resolve<IRoomPubSub>('RoomPubSub'),
+    ),
+  )
 
   // Register Inbound Adapters
   container.register(
@@ -81,6 +89,7 @@ export const configureContainer = async (): Promise<DIContainer> => {
       revealVoteHandler:
         container.resolve<RevealVoteHandler>('RevealVoteHandler'),
       clearVoteHandler: container.resolve<ClearVoteHandler>('ClearVoteHandler'),
+      leaveRoomHandler: container.resolve<LeaveRoomHandler>('LeaveRoomHandler'),
     }),
   )
 

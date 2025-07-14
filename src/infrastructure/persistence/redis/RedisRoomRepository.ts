@@ -1,6 +1,6 @@
 import { RedisClientType } from 'redis'
 
-import { Room, Participant, IRoomRepository } from '@/domain/room/entities'
+import { Room, Participant, IRoomRepository } from '@/domain/room'
 import { ConflictResourceError, NotFoundError } from '@/domain/shared'
 
 export class RedisRoomRepository implements IRoomRepository {
