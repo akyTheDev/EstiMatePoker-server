@@ -68,6 +68,7 @@ export class WsController {
   ) {
     try {
       const messageStr = message.toString('utf-8')
+      console.log('MESSAGE ARRIVED: ', messageStr)
       const data = messageStr ? JSON.parse(messageStr) : {}
       if (!data.type) {
         throw new Error('Invalid message structure.')
@@ -82,7 +83,7 @@ export class WsController {
 
       const result = await this.router.route(data.type, enrichedPayload)
 
-      clientData.roomId = clientData.roomId || result
+      clientData.roomId = result
     } catch (error) {
       console.error('Failed to handle message:', error)
       const errorMessage =
@@ -97,18 +98,26 @@ export class WsController {
     }
   }
 
-  public async handleDisconnect(clientData: ClientMetaData) {
-    if (!clientData.roomId) {
-      return
+  public async handleDisconnect(ws: WebSocket, clientData: ClientMetaData) {
+    try {
+      if (!clientData.roomId) {
+        return
+      }
+
+      const leaveMessage = {
+        type: CommandType.LEAVE_ROOM,
+        payload: {},
+      }
+
+      const messageBuffer = Buffer.from(JSON.stringify(leaveMessage))
+
+      await this.handleMessage(ws, clientData, messageBuffer)
+
+      console.log(
+        `User ${clientData.userId} from room ${clientData.roomId} has been processed for disconnection.`,
+      )
+    } catch (error: any) {
+      console.error('Error during disconnect cleanup:', error)
     }
-
-    await this.router.route(
-      CommandType.LEAVE_ROOM,
-      new LeaveRoomCommand(clientData.roomId, clientData.userId),
-    )
-
-    console.log(
-      `User ${clientData.userId} from room ${clientData.roomId} disconnected.`,
-    )
   }
 }

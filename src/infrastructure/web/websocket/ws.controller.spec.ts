@@ -118,7 +118,7 @@ describe('WsController', () => {
         roomId: 'room-abc',
       }
 
-      await controller.handleDisconnect(clientData)
+      await controller.handleDisconnect(mockWs, clientData)
 
       expect(mockRouter.route).toHaveBeenCalledWith(
         CommandType.LEAVE_ROOM,
@@ -133,7 +133,7 @@ describe('WsController', () => {
         roomId: null,
       }
 
-      await controller.handleDisconnect(clientData)
+      await controller.handleDisconnect(mockWs, clientData)
 
       expect(mockRouter.route).not.toHaveBeenCalled()
     })
