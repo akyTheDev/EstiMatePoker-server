@@ -17,12 +17,13 @@ async function bootstrap(): Promise<void> {
   const wsController = container.resolve<WsController>('WsController')
   const redisManager = container.resolve<RedisManager>('RedisManager')
   const subscriber = redisManager.getSubscriber()
-  await subscriber.pSubscribe('room:*:state', (message, _channel) => {
+  await subscriber.pSubscribe('room:*:state', async (message, _channel) => {
+    await new Promise((cb) => setTimeout(cb, 50))
     const data = JSON.parse(message)
     const roomId = data.payload.roomId
-    clients.forEach((clientData, ws) => {
+    clients.forEach(async (clientData, ws) => {
       if (clientData.roomId === roomId && ws.readyState === WebSocket.OPEN) {
-        ws.send(message)
+        await ws.send(message)
       }
     })
   })
